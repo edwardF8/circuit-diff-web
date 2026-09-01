@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Circuit-Diff</title>
+<style>
+  :root {
+    --old: #2a78d6;      /* base / old side */
+    --new: #eb6834;      /* edited / new side */
+    --method: #7a5fc7;   /* method violet */
+    --ink: #1a1a1a;
+    --muted: #52514e;
+    --faint: #c9c7c2;
+    --bg: #fdfdfc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Times New Roman", STIXGeneral, "DejaVu Serif", Georgia, serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  main { max-width: 40rem; text-align: center; }
+  .mark {
+    display: flex; justify-content: center; gap: .55rem;
+    margin-bottom: 2.2rem;
+  }
+  .mark span {
+    width: .85rem; height: .85rem; border-radius: 50%;
+    display: inline-block;
+  }
+  .mark .o  { background: var(--old); }
+  .mark .g  { background: none; border: 1.5px solid var(--faint); }
+  .mark .n  { background: var(--new); }
+  h1 {
+    font-size: 2.6rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    margin-bottom: .9rem;
+  }
+  h1 .dash { color: var(--faint); }
+  .tag {
+    font-size: 1.15rem;
+    color: var(--muted);
+    line-height: 1.55;
+    font-style: italic;
+    margin-bottom: 2.6rem;
+  }
+  .soon {
+    display: inline-block;
+    font-size: .95rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--method);
+    border: 1px solid var(--method);
+    border-radius: 2rem;
+    padding: .45rem 1.4rem;
+    margin-bottom: 2.6rem;
+  }
+  .links { font-size: 1rem; color: var(--muted); }
+  .links a {
+    color: var(--old);
+    text-decoration: none;
+    border-bottom: 1px solid var(--faint);
+    padding-bottom: 1px;
+  }
+  .links a:hover { border-bottom-color: var(--old); }
+  footer {
+    margin-top: 3.4rem;
+    font-size: .85rem;
+    color: var(--faint);
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="mark" aria-hidden="true">
+    <span class="o"></span><span class="o"></span><span class="g"></span><span class="n"></span><span class="n"></span>
+  </div>
+  <h1>Circuit<span class="dash">&#8202;&ndash;&#8202;</span>Diff</h1>
+  <p class="tag">Reading a model edit as the difference between two attribution circuits.</p>
+  <div class="soon">Coming&nbsp;Soon</div>
+  <p class="links">
+    In the meantime: <a href="https://anon-circuit-viewer.vercel.app/">interactive demo</a>
+  </p>
+  <footer>Paper, code, and data releases will appear here.</footer>
+</main>
+</body>
+</html>
