@@ -62,14 +62,18 @@
     padding: .45rem 1.4rem;
     margin-bottom: 2.6rem;
   }
-  .links { font-size: 1rem; color: var(--muted); }
-  .links a {
-    color: var(--old);
+  .demo-btn {
+    display: inline-block;
+    font-size: 1.05rem;
+    color: #fff;
+    background: var(--old);
+    border-radius: .45rem;
+    padding: .7rem 2.1rem;
     text-decoration: none;
-    border-bottom: 1px solid var(--faint);
-    padding-bottom: 1px;
+    letter-spacing: .02em;
   }
-  .links a:hover { border-bottom-color: var(--old); }
+  .demo-btn:hover { background: #1f5fae; }
+  .demo-sub { font-size: .9rem; color: var(--muted); margin-top: .8rem; }
   footer {
     margin-top: 3.4rem;
     font-size: .85rem;
@@ -85,9 +89,10 @@
   <h1>Circuit<span class="dash">&#8202;&ndash;&#8202;</span>Diff</h1>
   <p class="tag">Reading a model edit as the difference between two attribution circuits.</p>
   <div class="soon">Coming&nbsp;Soon</div>
-  <p class="links">
-    In the meantime: <a href="https://anon-circuit-viewer.vercel.app/">interactive demo</a>
+  <p>
+    <a class="demo-btn" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a>
   </p>
+  <p class="demo-sub">Explore the attribution-graph diff for the Eiffel Tower Paris&rarr;Rome edit.</p>
   <footer>Paper, code, and data releases will appear here.</footer>
 </main>
 </body>
