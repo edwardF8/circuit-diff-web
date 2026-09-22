@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
 <title>Circuit-Diff</title>
+<meta name="description" content="Circuit-Diff localizes a factual edit inside a language model by diffing two attribution graphs read through one frozen cross-layer transcoder.">
 <style>
   :root {
     --old: #2a78d6;      /* base / old side */
@@ -12,88 +14,268 @@
     --ink: #1a1a1a;
     --muted: #52514e;
     --faint: #c9c7c2;
+    --rule: #e4e3df;
     --bg: #fdfdfc;
+    --code-bg: #f4f3f0;
+    --old-tint: rgba(42, 120, 214, .07);
+    --new-tint: rgba(235, 104, 52, .07);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     background: var(--bg);
     color: var(--ink);
     font-family: "Times New Roman", STIXGeneral, "DejaVu Serif", Georgia, serif;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  main { max-width: 40rem; text-align: center; }
-  .mark {
-    display: flex; justify-content: center; gap: .55rem;
-    margin-bottom: 2.2rem;
-  }
-  .mark span {
-    width: .85rem; height: .85rem; border-radius: 50%;
-    display: inline-block;
-  }
-  .mark .o  { background: var(--old); }
-  .mark .g  { background: none; border: 1.5px solid var(--faint); }
-  .mark .n  { background: var(--new); }
-  h1 {
-    font-size: 2.6rem;
-    font-weight: 600;
-    letter-spacing: .01em;
-    margin-bottom: .9rem;
-  }
-  h1 .dash { color: var(--faint); }
-  .tag {
-    font-size: 1.15rem;
-    color: var(--muted);
-    line-height: 1.55;
-    font-style: italic;
-    margin-bottom: 2.6rem;
-  }
-  .soon {
-    display: inline-block;
-    font-size: .95rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--method);
-    border: 1px solid var(--method);
-    border-radius: 2rem;
-    padding: .45rem 1.4rem;
-    margin-bottom: 2.6rem;
-  }
-  .demo-btn {
-    display: inline-block;
     font-size: 1.05rem;
-    color: #fff;
-    background: var(--old);
-    border-radius: .45rem;
-    padding: .7rem 2.1rem;
-    text-decoration: none;
-    letter-spacing: .02em;
+    line-height: 1.55;
   }
-  .demo-btn:hover { background: #1f5fae; }
-  .demo-sub { font-size: .9rem; color: var(--muted); margin-top: .8rem; }
-  footer {
-    margin-top: 3.4rem;
-    font-size: .85rem;
-    color: var(--faint);
+  .wrap { max-width: 46rem; margin: 0 auto; padding: 3rem 1rem 4rem; }
+
+  /* ---- header (unchanged from the landing page) ---- */
+  header { text-align: center; }
+  .mark { display: flex; justify-content: center; gap: .55rem; margin-bottom: 2rem; }
+  .mark span { width: .85rem; height: .85rem; border-radius: 50%; display: inline-block; }
+  .mark .o { background: var(--old); }
+  .mark .g { background: none; border: 1.5px solid var(--faint); }
+  .mark .n { background: var(--new); }
+  h1 { font-size: 2.6rem; font-weight: 600; letter-spacing: .01em; margin-bottom: .8rem; }
+  h1 .dash { color: var(--faint); }
+  .tag { font-size: 1.15rem; color: var(--muted); line-height: 1.5; font-style: italic;
+         max-width: 30rem; margin: 0 auto 1.8rem; }
+  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; align-items: center; }
+  .btn {
+    display: inline-block; font-size: 1.02rem; color: #fff; background: var(--old);
+    border-radius: .45rem; padding: .62rem 1.7rem; text-decoration: none; letter-spacing: .02em;
+  }
+  .btn:hover { background: #1f5fae; }
+  .chip {
+    display: inline-block; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--faint); border-radius: 2rem; padding: .42rem 1rem;
+  }
+
+  /* ---- hero figure ---- */
+  figure.hero { width: min(58rem, 100%); margin: 2.6rem auto 0; padding: 0 1rem; }
+  figure.hero img { width: 100%; height: auto; display: block; }
+  figure.hero figcaption {
+    font-size: .92rem; color: var(--muted); text-align: center; max-width: 36rem;
+    margin: 1rem auto 0; line-height: 1.45;
+  }
+
+  /* ---- provisional-summary notice ---- */
+  .notice { font-size: .92rem; color: var(--muted); font-style: italic; text-align: center;
+            border: 1px solid var(--faint); border-radius: .45rem; padding: .55rem .9rem; margin: 1.6rem 0 0; }
+
+  /* ---- body ---- */
+  main { margin-top: 1rem; }
+  h2 {
+    font-size: 1.38rem; font-weight: 600; letter-spacing: .005em;
+    margin: 2.6rem 0 .7rem; padding-top: 1.6rem; border-top: 1px solid var(--rule);
+  }
+  p { margin: .75rem 0; }
+  em { font-style: italic; }
+  a { color: var(--old); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:hover { color: #1f5fae; }
+  ol.steps { padding-left: 1.4rem; margin: .6rem 0; }
+  ol.steps li { margin: .55rem 0; padding-left: .15rem; }
+  ul.limits { padding-left: 1.3rem; margin: .6rem 0; }
+  ul.limits li { margin: .45rem 0; }
+  .side { color: var(--muted); font-size: .95rem; }
+  .old { color: var(--old); } .new { color: var(--new); } .method { color: var(--method); }
+
+  /* ---- Paris -> Rome readout ---- */
+  .readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin: 1.1rem 0 .6rem; }
+  .col { border-radius: .6rem; padding: .95rem 1.1rem 1rem; border: 1px solid; }
+  .col.old { border-color: var(--old); background: var(--old-tint); }
+  .col.new { border-color: var(--new); background: var(--new-tint); }
+  .col h3 { font-size: 1.02rem; font-weight: 700; margin-bottom: .2rem; }
+  .col.old h3 { color: var(--old); } .col.new h3 { color: var(--new); }
+  .col .sub { font-size: .88rem; color: var(--muted); margin-bottom: .55rem; }
+  .col ul { list-style: none; }
+  .col li { margin: .38rem 0; font-size: .97rem; line-height: 1.4; padding-left: 1.7rem; text-indent: -1.7rem; }
+  .col li .rk { display: inline-block; width: 1.7rem; text-indent: 0; font-size: .78rem; color: var(--muted); }
+
+  /* ---- try it ---- */
+  .shot { margin: 1rem 0 .3rem; }
+  .shot img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: .5rem; }
+  .shot .cap { font-size: .88rem; color: var(--muted); text-align: center; margin-top: .55rem; }
+  pre {
+    background: var(--code-bg); border-radius: .5rem; padding: .85rem 1rem; margin: .8rem 0;
+    overflow-x: auto; font-size: .9rem; line-height: 1.5;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .cta { margin: 1.2rem 0 .4rem; }
+
+  footer { margin-top: 3.4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule);
+           font-size: .88rem; color: var(--muted); text-align: center; line-height: 1.6; }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 2.1rem; }
+    .tag { font-size: 1.05rem; }
+    body { font-size: 1rem; }
   }
 </style>
 </head>
 <body>
-<main>
+<div class="wrap">
+
+<header>
   <div class="mark" aria-hidden="true">
     <span class="o"></span><span class="o"></span><span class="g"></span><span class="n"></span><span class="n"></span>
   </div>
   <h1>Circuit<span class="dash">&#8202;&ndash;&#8202;</span>Diff</h1>
   <p class="tag">Reading a model edit as the difference between two attribution circuits.</p>
-  <div class="soon">Coming&nbsp;Soon</div>
-  <p>
-    <a class="demo-btn" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a>
-  </p>
-  <p class="demo-sub">Explore the attribution-graph diff for the Eiffel Tower Paris&rarr;Rome edit.</p>
-  <footer>Paper, code, and data releases will appear here.</footer>
+  <div class="links">
+    <a class="btn" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a>
+    <span class="chip">Paper · code · data soon</span>
+  </div>
+</header>
+</div>
+
+<figure class="hero">
+  <img src="schematic.svg" alt="Circuit-Diff in one pass. The prompt 'The Eiffel Tower is located in the city of' is run through the original model, which answers Paris, and through an edited copy, which answers Rome. Both are read through one cross-layer transcoder to give an original attribution graph A and a post-edit attribution graph B. Their difference splits into disappeared nodes, the features that carried Paris, France and French history, and appeared nodes, the features that carry Rome, Italy and Roman mythology.">
+  <figcaption>One prompt. Two models that differ by a single edited fact. One transcoder, held frozen, reading both.
+  What disappeared from the graph carried the old fact; what appeared carries the new one.</figcaption>
+</figure>
+
+<div class="wrap">
+<main>
+
+<p class="notice">Note: this summary was AI-generated and will be updated shortly.</p>
+
+<h2>The problem</h2>
+<p>A cross-layer transcoder turns a language model's computation on a prompt into an
+<em>attribution graph</em>: a sparse circuit of features, with weighted edges running into the
+answer. The graph is a real object. You can inspect it, prune it, and intervene on it.</p>
+<p>But its nodes are unlabeled. Reading a graph means cutting it down to the nodes that
+matter and then working out, one feature at a time, what each surviving node is for, usually
+by scrolling through the text that makes it fire. Every new prompt, every new question, starts
+that process over.</p>
+
+<h2>The idea</h2>
+<p>Instead of labeling the graph, change the model and watch what moves.</p>
+<p>Take a fact the model knows, <em>the Eiffel Tower is in Paris</em>, and overwrite it with a
+low-rank factual edit so the model now says <em>Rome</em>. Build the attribution graph before
+and after, through the <strong>same</strong> transcoder, held frozen. Because the lens does not
+change, any difference between the two graphs is a difference in the <em>model</em>, not in the
+dictionary you are reading it through.</p>
+<p>Features that were in the original graph and are gone from the edited one carried the old
+fact. Features new to the edited graph carry the new one. The diff is a ranked, testable list
+of where the fact lives.</p>
+
+<h2>How it works</h2>
+<ol class="steps">
+  <li><strong>Edit the fact.</strong> Apply a MEMIT edit (Paris&nbsp;&rarr;&nbsp;Rome) to a copy
+  of the model. The original is kept as it was.</li>
+  <li><strong>Build both graphs.</strong> Run the same prompt through both models with the same
+  frozen CLT, giving the original graph <span class="old">A</span> and the post-edit graph
+  <span class="new">B</span>. Node identities line up because the dictionary is identical.</li>
+  <li><strong>Find what appeared and disappeared.</strong> For every feature node, measure how
+  far its activation moved from A to B on a normalized scale from &minus;1 to 1. Nodes at
+  &minus;1 <span class="old">disappeared</span>; nodes at +1 <span class="new">appeared</span>.</li>
+  <li><strong>Calibrate against a null.</strong> Raw appeared/disappeared is too permissive:
+  on the edited prompt most of the graph moves a little. So the method sets a floor from the
+  edit's own <em>neighborhood</em> prompts, other subjects with the same relation whose answer
+  the edit should not touch, and keeps only the nodes that moved more than that floor.</li>
+  <li><strong>Rank each side.</strong> Disappeared and appeared nodes are ranked separately, by
+  how much their influence on the answer changed, weighted by how far they moved. The top of
+  each list is read off the transcoder's released feature dashboards.</li>
+</ol>
+
+<h2>What comes out</h2>
+<p>The running example, on Gemma-2-2B through a 426k-feature CLT. These are the top features
+on each side, described by the text that makes them fire:</p>
+<div class="readout">
+  <div class="col old">
+    <h3>Disappeared</h3>
+    <div class="sub">in the original graph, gone after the edit</div>
+    <ul>
+      <li><span class="rk">1</span>promotes French tokens; fires on <em>Grand Palais at Paris</em></li>
+      <li><span class="rk">&middot;</span>fires on <em>Louvre Museum in Paris</em></li>
+      <li><span class="rk">5</span>the French Revolution: <em>the events of 1789</em></li>
+      <li><span class="rk">14</span>French port cities: <em>Havre / Lyons / Nice</em></li>
+    </ul>
+  </div>
+  <div class="col new">
+    <h3>Appeared</h3>
+    <div class="sub">new to the graph after the edit</div>
+    <ul>
+      <li><span class="rk">1</span>fires on <em>in Rome, Italy</em> contexts</li>
+      <li><span class="rk">3</span>Roman antiquity: <em>Caesar / legion / Roman</em></li>
+      <li><span class="rk">4</span>promotes <em>Italy</em>, sitting at the subject token itself</li>
+      <li><span class="rk">5</span>Roman mythology: <em>Romulus and Remus in 753</em></li>
+      <li><span class="rk">13</span>the papacy: <em>rival popes in Rome and Avignon</em></li>
+    </ul>
+  </div>
+</div>
+<p>These are not detectors of the word <em>Rome</em>. They are the geography, history and
+associations around the old and new objects, and on this edit the subject representation
+itself now carries the new one. The same reading holds on other edits: moving the Taj Mahal's
+religion trades a <em>Shah / Allah</em> feature for <em>Protestant / Christian / churches</em>;
+moving the Pentium II from Intel to Microsoft trades <em>Hyper-Threading enabled CPU</em> for a
+feature that fires inside Transact-SQL documentation.</p>
+
+<h2>Does the lens survive the edit?</h2>
+<p>A fair worry: if the edit damages the transcoder's fit to the model, the diff could be
+reading noise. We measured. The damage is real and it lands exactly where the edit does. On
+edited prompts the graph's replacement score falls (median drop about 0.3) while the more
+lenient completeness score falls much less (about 0.06); on neighborhood prompts neither moves.
+Fine-tuning the transcoder on the edited model does not recover the fit, it stops at parity, so
+the frozen original is used throughout, which also keeps every feature readable on its released
+dashboard. This remains the method's central limitation, and the paper says so.</p>
+
+<h2>Is it causal?</h2>
+<p>The selected nodes are patched back into the <em>unedited</em> model. Appeared nodes are
+scored on whether installing them reproduces the edit, raising the <em>Rome</em> logit;
+disappeared nodes on whether suppressing them lowers the <em>Paris</em> logit. Each arm is
+compared against a count-matched baseline that ranks every node in the graph by its influence
+on the answer, and against a random draw of the same size.</p>
+<p>Over 24 CounterFact edits, patching the top&nbsp;5% set as a group: on the inject side it
+moves the target logit about twice as far as the influence baseline (9.98 versus 5.90 centered
+logits; 8.16 versus 4.94 under the null floor), and per-edit sign tests favor it on 9 to 11 of
+12 edits at every depth. On the suppress side the two are comparable, and under the floor the
+baseline is ahead. Single nodes rarely move the logit alone, since a concept is split across
+several features, so the group result is the one that matters.</p>
+
+<h2>Limitations</h2>
+<ul class="limits">
+  <li>The method rests on two things it does not measure directly: that the edit landed, and
+  that the transcoder still describes the edited model well enough to read.</li>
+  <li>Without the null floor, &ldquo;changed&rdquo; covers 96% of the edited graph on the gained
+  side and 48% on the lost side. The floor brings those to 14% and 3%, but its percentile has
+  not been tuned systematically.</li>
+  <li>On the suppress side, the advantage over simply reading off influence is small or
+  absent.</li>
+  <li>Circuit-Diff inherits whatever the transcoder basis gets wrong. It can only report
+  movement among features the dictionary happens to represent.</li>
+  <li>Knowledge editing has side effects. Any side effect shows up in the diff as movement that
+  is not the fact, which is why recurrence across edits is worth checking.</li>
+</ul>
+
+<h2>Try it</h2>
+<p>The demo is the Eiffel Tower edit above, in a forked attribution-graph viewer:
+<span class="new">orange</span> is appeared, <span class="old">blue</span> is disappeared,
+gray is unchanged, with the ranked movers list and the feature dashboards wired in.</p>
+<div class="shot">
+  <img src="viewer.png" alt="The Circuit-Diff viewer: an attribution graph with appeared features in orange and disappeared features in blue, the movers list open on the right.">
+  <div class="cap">The viewer on the edited prompt, movers list open.</div>
+</div>
+<p class="cta"><a class="btn" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a></p>
+<p>The library is pip-installable, and a precomputed bundle for this edit ships with it, so the
+viewer runs with no GPU and no model download:</p>
+<pre>pip install circuit-diff
+cs load circuit_diff/examples/bundles/eiffel --serve</pre>
+<p class="side">Loading, viewing and ranking a bundle needs only pandas. Building new graphs and
+running the causal patching needs a GPU and circuit-tracer. Two further tools ship alongside:
+multi-prompt aggregation, and rule-based grouping of features into supernodes.</p>
+
 </main>
+
+<footer>
+  Paper, code and data links will appear here.<br>
+  Viewer built on Anthropic's attribution-graphs frontend and the circuit-tracer package.
+</footer>
+
+</div>
 </body>
 </html>
