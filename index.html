@@ -48,6 +48,8 @@
     border-radius: .45rem; padding: .62rem 1.7rem; text-decoration: none; letter-spacing: .02em;
   }
   .btn:hover { background: #1f5fae; }
+  .btn.alt { background: none; color: var(--old); border: 1.5px solid var(--old); padding: .55rem 1.6rem; }
+  .btn.alt:hover { background: var(--old-tint); }
   .chip {
     display: inline-block; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase;
     color: var(--muted); border: 1px solid var(--faint); border-radius: 2rem; padding: .42rem 1rem;
@@ -126,8 +128,9 @@
   <h1>Circuit<span class="dash">&#8202;&ndash;&#8202;</span>Diff</h1>
   <p class="tag">Reading a model edit as the difference between two attribution circuits.</p>
   <div class="links">
-    <a class="btn" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a>
-    <span class="chip">Paper · code · data soon</span>
+    <a class="btn" href="https://arxiv.org/abs/2609.23892">Read the paper</a>
+    <a class="btn alt" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a>
+    <span class="chip">Code · data soon</span>
   </div>
 </header>
 </div>
@@ -272,7 +275,7 @@ multi-prompt aggregation, and rule-based grouping of features into supernodes.</
 </main>
 
 <footer>
-  Paper, code and data links will appear here.<br>
+  Paper: <a href="https://arxiv.org/abs/2609.23892">arXiv:2609.23892</a>. Code and data links will appear here.<br>
   Viewer built on Anthropic's attribution-graphs frontend and the circuit-tracer package.
 </footer>
 
