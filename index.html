@@ -130,7 +130,8 @@
   <div class="links">
     <a class="btn" href="https://arxiv.org/abs/2609.23892">Read the paper</a>
     <a class="btn alt" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a>
-    <span class="chip">Code · data soon</span>
+    <a class="btn alt" href="https://github.com/edwardF8/Circuit-Diff">Code</a>
+    <a class="btn alt" href="https://huggingface.co/datasets/edwardF8/Circuit-Diff-paper-data">Data</a>
   </div>
 </header>
 </div>
@@ -264,18 +265,21 @@ gray is unchanged, with the ranked movers list and the feature dashboards wired 
   <div class="cap">The viewer on the edited prompt, movers list open.</div>
 </div>
 <p class="cta"><a class="btn" href="https://anon-circuit-viewer.vercel.app/">Launch the demo</a></p>
-<p>The library is pip-installable, and a precomputed bundle for this edit ships with it, so the
-viewer runs with no GPU and no model download:</p>
+<p>The library is <a href="https://github.com/edwardF8/Circuit-Diff">open source on GitHub</a> and pip-installable, and a precomputed
+bundle for this edit ships with it, so the viewer runs with no GPU and no model download:</p>
 <pre>pip install circuit-diff
 cs load circuit_diff/examples/bundles/eiffel --serve</pre>
 <p class="side">Loading, viewing and ranking a bundle needs only pandas. Building new graphs and
 running the causal patching needs a GPU and circuit-tracer. Two further tools ship alongside:
-multi-prompt aggregation, and rule-based grouping of features into supernodes.</p>
+multi-prompt aggregation, and rule-based grouping of features into supernodes. The summary tables
+behind every figure in the paper are <a href="https://huggingface.co/datasets/edwardF8/Circuit-Diff-paper-data">released as a dataset on Hugging Face</a>.</p>
 
 </main>
 
 <footer>
-  Paper: <a href="https://arxiv.org/abs/2609.23892">arXiv:2609.23892</a>. Code and data links will appear here.<br>
+  Paper: <a href="https://arxiv.org/abs/2609.23892">arXiv:2609.23892</a> &middot;
+  Code: <a href="https://github.com/edwardF8/Circuit-Diff">GitHub</a> &middot;
+  Data: <a href="https://huggingface.co/datasets/edwardF8/Circuit-Diff-paper-data">Hugging Face</a><br>
   Viewer built on Anthropic's attribution-graphs frontend and the circuit-tracer package.
 </footer>
 
