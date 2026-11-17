@@ -66,6 +66,15 @@
   .btn.alt { background: none; color: var(--old); border: 1.5px solid var(--old); padding: .55rem 1.6rem; }
   .btn.alt:hover { background: var(--old-tint); color: var(--old); }
 
+  /* ---- back to the personal site (same as the InformedXRD page) ---- */
+  .back { position: fixed; top: 18px; left: 22px; z-index: 10;
+          display: inline-flex; align-items: center; gap: .4rem;
+          padding: .35rem .8rem .35rem .6rem; border: 1px solid var(--rule); border-radius: 999px;
+          background: var(--bg); color: var(--muted); font-size: .85rem; text-decoration: none; }
+  .back:hover { color: var(--ink); border-color: var(--soft); }
+  .back svg { width: 1em; height: 1em; }
+  @media (max-width: 720px) { .back { position: absolute; top: 14px; left: 16px; } .wrap.top { padding-top: 3.6rem; } }
+
   /* ---- hero figure ---- */
   figure.hero { width: min(64rem, 100%); margin: 2.6rem auto 0; padding: 0 1rem; }
   figure.hero figcaption {
@@ -159,6 +168,10 @@
 </style>
 </head>
 <body>
+<a class="back" href="https://edwardf8.github.io/">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Eddie Friedman
+</a>
 <div class="wrap top">
 
 <p class="disclaimer"><strong>AI usage disclaimer:</strong> AI was used to create and write most of this website. While much was pushed from our paper, we plan to still rewrite and make more concise in the future.</p>
